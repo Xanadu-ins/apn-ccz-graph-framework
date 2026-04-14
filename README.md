@@ -1,3 +1,4 @@
+This repository is provided to support reproducibility of the experimental results.
 # APN CCZ-Equivalence via Graph Isomorphism
 
 ## Overview
@@ -11,10 +12,13 @@ We propose a framework that reduces the problem of CCZ-equivalence of APN functi
 ---
 
 ## Repository Structure
-code/ SageMath implementations of graph constructions
+code/ SageMath implementations (graph constructions + invariant computations)
 data/ Input APN function sets
 results/ Experimental results (tables and logs)
 
+The `code/` directory includes:
+- Four graph construction methods
+- Additional scripts for computing classical invariants of selected APN functions
 
 ---
 
@@ -27,26 +31,56 @@ The repository includes four graph constructions:
 - Incidence Bipartite Graph
 - Higher-Order Incidence Bipartite Graph
 
-Each method is implemented as an independent SageMath script.
+In addition, we provide scripts for computing values of selected APN functions under certain classical invariants.
 
 ---
 
 ## Requirements
 
 - SageMath 9.3
-- Jupyter Notebook (recommended for running Sage)
+- Jupyter Notebook (recommended)
+- Nauty (for canonical labeling)
+- Python package: `psutil` (for memory monitoring)
+
+---
+
+## Initial Setup (First-Time Use)
+
+Before running the scripts, please complete the following setup steps.
+
+### 1. Install Nauty
+
+Open **SageMath Shell** and run:
+cd ~
+wget http://pallini.di.uniroma1.it/nauty2_9_1.tar.gz
+tar zxvf nauty2_9_1.tar.gz
+cd nauty2_9_1
+./configure
+make
+
+If the executable `dreadnaut` is generated successfully, the installation is complete.
+
+---
+
+### 2. Install `psutil`
+
+Open **SageMath Shell** and run:
+sage -pip install psutil
+
+This package is used to monitor memory usage during experiments.
 
 ---
 
 ## How to Run
 
 1. Open SageMath 9.3 with Jupyter Notebook:
+sage -n jupyter
 
-3. Load one of the scripts from the `code/` directory.
+2. Load one of the scripts from the `code/` directory.
 
-4. Modify the following parameters in the script:
-- Dimension `n`
-- List of APN functions
+3. Modify the following parameters in the script:
+   - Dimension `n`
+   - List of APN functions
 
 4. Execute the script to generate canonical forms and experimental results.
 
