@@ -1,0 +1,199 @@
+import os
+import time
+import subprocess
+import psutil
+from itertools import combinations
+
+from sage.all import *
+from sage.rings.finite_rings.finite_field_constructor import GF
+from sage.coding.linear_code import LinearCode
+
+# ===================== Configuration Parameters =====================
+N = 7
+q = 2 ** N
+Fp = GF(2)
+Fq = GF(q, name='α', modulus='conway')
+ksi = Fq.gen()
+R = PolynomialRing(Fq, 'X')
+X = R.gen()
+
+NAUTY_PATH = os.path.expanduser("~/nauty2_9_1/dreadnaut")
+
+# ===================== APN Functions for n=7 =====================
+
+apn_functions = [
+    ("1", X**3),
+    ("2", X**9),
+    ("3", X**5),
+    ("4", X**13),
+    ("5", X**57),
+    ("6", X**126),
+    ("7", X**3 + X**9 + X**10 + X**66 + X**80),
+    ("8", X**5 + X**18 + X**34),
+    ("9", X**3 + X**6 + X**20),
+    ("10", X**3 + X**17 + X**20 + X**34 + X**66),
+    ("11", X**3 + X**17 + X**33 + X**34),
+    ("12", X**3 + X**5 + X**10 + X**33 + X**34),
+    ("13", X**3 + X**9 + X**18 + X**66),
+    ("14", X**3 + X**12 + X**17 + X**33),
+    ("15", X**3 + X**20 + X**34 + X**66),
+    ("16", X**3 + X**12 + X**40 + X**72),
+    ("17", X**3 + X**6 + X**34 + X**40 + X**72),
+    ("18", X**3 + X**5 + X**6 + X**12 + X**33 + X**34),
+]
+
+# ===================== Utility Functions =====================
+def field_elem_to_bits(a, n):
+    """
+    Convert an element of F_{2^n} to a bit list of length n
+    """
+    coeffs = a.polynomial().coefficients(sparse=False)
+    coeffs += [0] * (n - len(coeffs))
+    return coeffs[:n]
+
+def build_code_from_apn(f_poly):
+    """
+    Construct the short code C_f using the original method
+    """
+    rows = []
+    for i in range(q - 1):
+        a = ksi ** i
+        b = f_poly(a)
+        row = field_elem_to_bits(a, N) + field_elem_to_bits(b, N)
+        rows.append(row)
+
+    H = matrix(Fp, q - 1, 2 * N, rows).transpose()
+    C = LinearCode(H)
+    return C
+
+def get_min_weight_codewords(C):
+    """
+    Extract codewords with minimum weight
+    """
+    wd = C.weight_distribution()
+    minw = next(w for w in range(1, len(wd)) if wd[w] > 0)
+    cws = [v for v in C.list() if v.hamming_weight() == minw]
+    return minw, cws
+
+def build_pair_incidence_graph(codewords, code_length):
+    """
+    Construct the Higher-Order Incidence Bipartite Graph
+
+    Left nodes:
+        All coordinate pairs (i, j) with i < j appearing in the support of any minimum-weight codeword
+    Right nodes:
+        Minimum-weight codewords
+
+    An edge connects pair (i,j) with a codeword node if the codeword has 1 at both positions i and j
+    """
+    # Collect all unique coordinate pairs
+    pair_set = set()
+    cw_supports = []
+
+    for cw in codewords:
+        sup = sorted(cw.support())
+        cw_supports.append(sup)
+        for pair in combinations(sup, 2):
+            pair_set.add(pair)
+
+    pair_list = sorted(pair_set)   # Fixed order for reproducibility
+    pair_to_id = {p: idx for idx, p in enumerate(pair_list)}
+
+    num_pairs = len(pair_list)
+    num_cw = len(codewords)
+    total_nodes = num_pairs + num_cw
+
+    lines = []
+    lines.append(f"n={total_nodes}")
+    lines.append("g")
+
+    # Right nodes (codewords) start from num_pairs
+    for idx, sup in enumerate(cw_supports):
+        cw_id = num_pairs + idx
+        neigh = []
+        for pair in combinations(sup, 2):
+            neigh.append(str(pair_to_id[pair]))
+        if neigh:
+            lines.append(f"{cw_id} : {' '.join(neigh)};")
+        else:
+            lines.append(f"{cw_id} : ;")
+
+    lines.append(".")
+    # Vertex coloring: left = coordinate pair nodes, right = codeword nodes
+    part1 = " ".join(map(str, range(num_pairs)))
+    part2 = " ".join(map(str, range(num_pairs, total_nodes)))
+    lines.append(f"f=[{part1}|{part2}]")
+    lines.append("-a")
+    lines.append("cx")
+    lines.append("z")
+    lines.append("q")
+
+    return "\n".join(lines), num_pairs, num_cw
+
+def get_hash(nauty_input):
+    """
+    Extract canonical string/hash line from dreadnaut output
+    """
+    try:
+        proc = subprocess.run(
+            [NAUTY_PATH],
+            input=nauty_input,
+            capture_output=True,
+            text=True,
+            timeout=None
+        )
+        for line in reversed(proc.stdout.splitlines()):
+            if "[" in line and "]" in line:
+                return line.strip()
+    except Exception:
+        pass
+    return "NO_HASH"
+
+# ===================== Main Program =====================
+def main():
+    process = psutil.Process()
+
+    print(f"===== Isomorphism Determination Report for APN Functions (n={N}): Higher-Order Incidence Bipartite Graph =====")
+    print(
+        f"{'Func':<6} {'Pairs':<10} {'Codewords':<10} {'Nodes':<10} "
+        f"{'Edges':<10} {'Build(s)':<10} {'Real(s)':<10} {'User(s)':<10} "
+        f"{'Mem(KB)':<10} Hash"
+    )
+    print("-" * 180)
+
+    for name, f_poly in apn_functions:
+        t0 = time.time()
+
+        # 1. Construct linear code
+        C = build_code_from_apn(f_poly)
+
+        # 2. Extract minimum-weight codewords
+        minw, cws = get_min_weight_codewords(C)
+
+        # 3. Construct Higher-Order Incidence Bipartite Graph
+        naut_in, num_pairs, num_cw = build_pair_incidence_graph(cws, C.length())
+        build_t = time.time() - t0
+
+        # Graph edges = sum of coordinate pairs in all codeword supports
+        edges = sum(len(list(combinations(v.support(), 2))) for v in cws)
+
+        # 4. Call nauty
+        t1 = time.time()
+        hsh = get_hash(naut_in)
+        real_t = time.time() - t1
+        user_t = real_t
+
+        # 5. Memory usage
+        mem = process.memory_info().rss // 1024
+
+        print(
+            f"{name:<6} {num_pairs:<10} {num_cw:<10} {num_pairs + num_cw:<10} "
+            f"{edges:<10} {build_t:<10.3f} {real_t:<10.3f} {user_t:<10.3f} "
+            f"{mem:<10} {hsh}"
+        )
+
+    print("-" * 180)
+    print("✅ Calculation of all APN functions completed!")
+
+if __name__ == "__main__":
+    main()
