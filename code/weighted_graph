@@ -1,0 +1,144 @@
+import os
+import time
+import subprocess
+from sage.all import *
+from sage.rings.finite_rings.finite_field_constructor import GF
+from sage.coding.linear_code import LinearCode
+
+# ===================== Configuration Parameters =====================
+N = 5                         #you can change "n" here
+q = 2 ** N
+Fp = GF(2)
+Fq = GF(q, name='α', modulus='conway')
+ksi = Fq.gen()
+R = PolynomialRing(Fq, 'X')
+X = R.gen()
+
+OUTPUT_DIR = os.path.join("weighted_graph_results", f"n_{N}")
+NAUTY_PATH = os.path.expanduser("~/nauty2_9_1/dreadnaut")
+
+# ===================== APN Functions =====================
+apn_functions = [         #you can change the functions here
+    ("1", X**3),
+    ("2", X**5),
+    ("3", X**15),
+]
+# ===================== Helper Functions =====================
+def hamming(c1, c2):
+    return (c1 - c2).hamming_weight()
+
+def build_dreadnaut_file(codewords, output_file):
+    num_cw = len(codewords)
+    edges = []
+    dist_map = {}
+    current_node = num_cw
+
+    for i in range(num_cw):
+        for j in range(i + 1, num_cw):
+            d = hamming(codewords[i], codewords[j])
+            w = current_node
+            current_node += 1
+            edges.append((w, i))
+            edges.append((w, j))
+            dist_map.setdefault(d, []).append(w)
+
+    total_nodes = current_node
+    with open(output_file, 'w') as f:
+        f.write(f"n={total_nodes}\ng\n")
+        w_map = {}
+        for w, t in edges:
+            w_map.setdefault(w, []).append(t)
+        for w in range(num_cw, total_nodes):
+            f.write(f"{w} : {' '.join(map(str, w_map[w]))};\n")
+        f.write(".\n")
+
+        parts = [' '.join(map(str, range(num_cw)))]
+        for d in sorted(dist_map):
+            parts.append(' '.join(map(str, sorted(dist_map[d]))))
+        f.write(f"f=[{'|'.join(parts)}]\n")
+        f.write("-a\ncx\nz\nq\n")
+    return total_nodes, len(edges)
+
+# ===================== 【Core: Windows-compatible Nauty Call】 =====================
+def run_nauty_and_get_stats(dre_file):
+    # 1. Call Nauty directly with subprocess to avoid Shell issues
+    start_time = time.time()
+    try:
+        with open(dre_file, 'r') as f_in:
+            result = subprocess.run(
+                [NAUTY_PATH],
+                stdin=f_in,
+                capture_output=True,
+                text=True,
+                timeout=300
+            )
+    except Exception as e:
+        print(f"Nauty call error: {e}")
+        return 0.0, 0.0, 0, "NO_HASH"
+
+    real_time = time.time() - start_time
+    user_time = real_time  # Use real time to approximate CPU time on Windows
+
+    # 2. Extract hash (read directly from stdout, no files needed)
+    graph_hash = "NO_HASH"
+    for line in reversed(result.stdout.splitlines()):
+        if '[' in line and ']' in line:
+            graph_hash = line.strip()
+            break
+
+    # 3. Memory usage (get peak accurately with psutil on Windows Sage)
+    mem_kb = 0
+    try:
+        import psutil
+        process = psutil.Process(os.getpid())
+        mem_info = process.memory_info()
+        mem_kb = mem_info.rss // 1024  # Convert to KB
+    except ImportError:
+        print("⚠️ psutil not installed, cannot measure memory. Install with: 'sage -pip install psutil'")
+
+    return real_time, user_time, mem_kb, graph_hash
+
+# ===================== Main Program =====================
+def main():
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    print(f"===== Weighted Graph Isomorphism Results n={N} =====")
+    print(f"{'Func':<6}{'Nodes':<8}{'Edges':<10}{'Build(s)':<10}{'Real(s)':<10}{'User(s)':<10}{'Mem(KB)':<10}Hash")
+    print("-"*150)
+
+    for name, f_poly in apn_functions:
+        t0 = time.time()
+
+        # Construct linear code
+        seq = []
+        for i in range(q-1):
+            a = ksi**i
+            b = f_poly(a)
+            coeff_a = a.polynomial().coefficients(sparse=False)
+            coeff_a += [0]*(N - len(coeff_a))
+            coeff_b = b.polynomial().coefficients(sparse=False)
+            coeff_b += [0]*(N - len(coeff_b))
+            seq += coeff_a + coeff_b
+            
+        G = matrix(Fp, q-1, 2*N, [seq[i*2*N:(i+1)*2*N] for i in range(q-1)]).transpose()
+        C = LinearCode(G)
+
+        # Minimum weight codewords
+        wd = C.weight_distribution()
+        minw = next(w for w in range(1, len(wd)) if wd[w] > 0)
+        cws = [v for v in C.list() if v.hamming_weight() == minw]
+
+        # Build graph
+        dre = os.path.join(OUTPUT_DIR, f"{name}.dre")
+        nodes, edges = build_dreadnaut_file(cws, dre)
+        build_t = time.time() - t0
+
+        # Run nauty and get full statistics
+        real_t, user_t, mem_kb, graph_hash = run_nauty_and_get_stats(dre)
+
+        # Print full result line
+        print(f"{name:<6}{nodes:<8}{edges:<10}{build_t:<10.3f}{real_t:<10.3f}{user_t:<10.3f}{mem_kb:<10}{graph_hash}")
+
+    print("-"*150)
+
+if __name__ == "__main__":
+    main()
