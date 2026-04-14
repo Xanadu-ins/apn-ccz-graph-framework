@@ -51,11 +51,17 @@ Before running the scripts, please complete the following setup steps.
 ### 1. Install Nauty
 
 Open **SageMath Shell** and run:
+
 cd ~
+
 wget http://pallini.di.uniroma1.it/nauty2_9_1.tar.gz
+
 tar zxvf nauty2_9_1.tar.gz
+
 cd nauty2_9_1
+
 ./configure
+
 make
 
 If the executable `dreadnaut` is generated successfully, the installation is complete.
@@ -65,6 +71,7 @@ If the executable `dreadnaut` is generated successfully, the installation is com
 ### 2. Install `psutil`
 
 Open **SageMath Shell** and run:
+
 sage -pip install psutil
 
 This package is used to monitor memory usage during experiments.
@@ -74,15 +81,18 @@ This package is used to monitor memory usage during experiments.
 ## How to Run
 
 1. Open SageMath 9.3 with Jupyter Notebook:
+
 sage -n jupyter
 
-2. Load one of the scripts from the `code/` directory.
+3. Load one of the scripts from the `code/` directory.
 
-3. Modify the following parameters in the script:
+4. Modify the following parameters in the script:
+   
    - Dimension `n`
+     
    - List of APN functions
 
-4. Execute the script to generate canonical forms and experimental results.
+6. Execute the script to generate canonical forms and experimental results.
 
 ---
 
@@ -91,6 +101,7 @@ sage -n jupyter
 All experimental results reported in the paper are included in the `results/` directory.
 
 - `n7_comparison.csv`: Representative comparison for dimension n = 7
+  
 - Additional datasets for other dimensions
 
 These results demonstrate that the proposed graph-based methods achieve stronger distinguishability than classical invariants in several cases.
