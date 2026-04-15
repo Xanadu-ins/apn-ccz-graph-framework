@@ -1,0 +1,283 @@
+# =============================================================
+# SageMath 9.3 — Chapter 3: CCZ-Equivalence Invariants
+# n = 6, APN Functions (Total 13)
+# Final Version: Explicit Trace Calculation, Fully Bypasses Trace Name Conflict
+# =============================================================
+
+# ========== Settings ==========
+
+n = 6
+
+F.<alpha> = GF(2^n)
+ksi = alpha
+R.<X> = PolynomialRing(F, 'X')
+
+apn_functions = [
+    ("1",  X**3),
+    ("2",  X**3 + ksi**11*X**6 + ksi*X**9),
+    ("3",  X**3 + X**5 + ksi**62*X**9 + ksi**3*X**10
+              + X**18 + ksi**3*X**20 + ksi**3*X**34 + X**40),
+    ("4",  X**3 + ksi**56*X**5 + ksi**59*X**9 + ksi**60*X**10
+              + ksi**56*X**17 + ksi**62*X**18),
+    ("5",  X**3 + X**10 + ksi*X**24),
+    ("6",  X**3 + ksi**17*(X**17 + X**18 + X**20 + X**24)),
+    ("7",  X**3 + ksi**11*X**5 + ksi**13*X**9 + X**17
+              + ksi**11*X**33 + X**48),
+    ("8",  X**3 + ksi**50*X**9 + ksi**50*X**17
+              + ksi**25*X**18 + ksi**50*X**36),
+    ("9",  X**3 + ksi**52*X**10 + ksi**5*X**17 + ksi**19*X**24
+              + ksi**30*X**34 + ksi**25*X**48),
+    ("10", X**3 + ksi**14*X**6 + ksi**35*X**10 + ksi**52*X**17
+              + ksi**54*X**20 + ksi**18*X**36 + ksi**38*X**48),
+    ("11", X**3 + X**5 + X**10 + ksi**54*X**18
+              + ksi**58*X**34 + ksi**58*X**36),
+    ("12", X**3 + ksi**58*X**5 + ksi**12*X**6 + ksi**20*X**9
+              + ksi**55*X**12 + ksi**58*X**33 + ksi**21*X**34
+              + ksi**44*X**40),
+    ("13", X**3 + X**5 + X**12 + ksi**62*X**36
+              + ksi**3*X**40 + X**48),
+]
+
+# =============================================================
+# Automatic Criteria
+# =============================================================
+
+SKIP_GAMMA = (n > 6)
+SKIP_SIGMA = (n > 5)
+SKIP_DIST  = (n > 6)
+
+# =============================================================
+# Basic Setup
+# =============================================================
+
+q = 2^n
+F_list = list(F)
+idx_of = {elem: idx for idx, elem in enumerate(F_list)}
+
+def precompute(F_map):
+    return [F_map(x) for x in F_list]
+
+# ---- Trace Calculation (Explicit Formula) ----
+def Tr(elt):
+    """
+    Absolute trace over GF(2^n):
+    Tr(elt) = elt + elt^2 + elt^4 + ... + elt^(2^(n-1))
+    In GF(2), addition is XOR, result is 0 or 1
+    """
+    result = elt
+    p = elt
+    for i in range(1, n):
+        p = p * p          # p = elt^(2^i)
+        result = result + p
+    # result is now an element of F, return its integer representation (0 or 1)
+    return int(result)     # In GF(2), 0 -> integer 0, non-zero -> integer 1
+
+# =============================================================
+# Invariant Computation Functions
+# =============================================================
+
+def differential_uniformity(F_map):
+    max_count = 0
+    for a in F_list:
+        if a == 0:
+            continue
+        for b in F_list:
+            count = 0
+            for x in F_list:
+                if F_map(x) + F_map(x+a) == b:
+                    count += 1
+            if count > max_count:
+                max_count = count
+    return max_count
+
+
+def nonlinearity(F_map):
+    max_walsh = 0
+    for a in F_list:
+        if a == 0:
+            continue
+        for b in F_list:
+            walsh_val = 0
+            for x in F_list:
+                t_val = Tr(a * x + b * F_map(x))
+                if t_val == 0:
+                    walsh_val += 1
+                else:
+                    walsh_val -= 1
+            abs_val = abs(walsh_val)
+            if abs_val > max_walsh:
+                max_walsh = abs_val
+    nl = 2^(n-1) - max_walsh / 2
+    return int(nl), int(max_walsh)
+
+
+def extended_walsh_spectrum(F_map):
+    spectrum = []
+    for a in F_list:
+        for b in F_list:
+            walsh_val = 0
+            for x in F_list:
+                t_val = Tr(a * x + b * F_map(x))
+                if t_val == 0:
+                    walsh_val += 1
+                else:
+                    walsh_val -= 1
+            spectrum.append(abs(walsh_val))
+    spectrum.sort()
+    return spectrum
+
+
+def gamma_rank(F_map):
+    F_vals = precompute(F_map)
+    M = matrix(GF(2), q * q, q * q)
+    for block_idx, (a, b) in enumerate([(a, b) for a in F_list for b in F_list]):
+        for x_idx, x in enumerate(F_list):
+            pt0 = x + a
+            pt1 = F_vals[x_idx] + b
+            point_idx = idx_of[pt0] * q + idx_of[pt1]
+            M[block_idx, point_idx] = 1
+    return int(M.rank())
+
+
+def distance_invariant(F_map, reduced=False):
+    F_vals = precompute(F_map)
+    if reduced:
+        counts = []
+        for b in F_list:
+            count = 0
+            for a in F_list:
+                found = False
+                for x in F_list:
+                    if F_vals[idx_of[x + a]] == b:
+                        found = True
+                        break
+                if found:
+                    count += 1
+            counts.append(count)
+    else:
+        counts = []
+        for b in F_list:
+            for c in F_list:
+                count = 0
+                for a in F_list:
+                    found = False
+                    for x in F_list:
+                        if (F_vals[idx_of[x]]
+                            + F_vals[idx_of[x + a]]
+                            + F_vals[idx_of[x + c]]) == b:
+                            found = True
+                            break
+                    if found:
+                        count += 1
+                counts.append(count)
+    counts.sort()
+    return counts
+
+
+# =============================================================
+# Main Program
+# =============================================================
+
+print(f"\n{'=' * 80}")
+print(f"#  Chapter 3: CCZ-Equivariant Invariants  (n = {n}, q = {q})")
+print(f"#  Number of Functions: {len(apn_functions)}")
+print(f"{'=' * 80}\n")
+
+print(f"  [Automatic Criteria]")
+print(f"    Σ-rank : {'Skipped (n>5)' if SKIP_SIGMA else 'Computed'}")
+print(f"    Γ-rank : {'Skipped (n>6)' if SKIP_GAMMA else 'Computed'}")
+print(f"    Π_F    : {'Skipped (n>6)' if SKIP_DIST  else 'Computed'}")
+print()
+
+results = []
+
+for num, poly in apn_functions:
+    F_map = poly
+    dash_len = max(0, 60 - len(str(poly)))
+    print(f"  -- #{num}: F(x) = {poly} " + ("-" * dash_len))
+    print(f"    δ_F, NL, Walsh ...", end=" ", flush=True)
+
+    delta     = differential_uniformity(F_map)
+    nl, max_w = nonlinearity(F_map)
+    spectrum  = extended_walsh_spectrum(F_map)
+    nonzero_walsh = sorted(set(s for s in spectrum if s > 0))
+    walsh_dist = [(v, spectrum.count(v)) for v in nonzero_walsh]
+    print(f"done (δ={delta}, NL={nl}, |W|={max_w})")
+
+    if SKIP_GAMMA:
+        gr_str = "Skipped"
+    else:
+        print(f"    Γ-rank ...", end=" ", flush=True)
+        gr = gamma_rank(F_map)
+        gr_str = str(gr)
+        print(f"done (Γ={gr})")
+
+    sr_str = "Skipped (n=6)"
+
+    if SKIP_DIST:
+        pi_str, pi_r_str = "Skipped", "Skipped"
+        pi_dist, pi_red_dist = [], []
+    else:
+        print(f"    Π_F, Π_F^0 ...", end=" ", flush=True)
+        pi_full  = distance_invariant(F_map, reduced=False)
+        pi_red   = distance_invariant(F_map, reduced=True)
+        pi_dist     = [(v, pi_full.count(v)) for v in sorted(set(pi_full))]
+        pi_red_dist = [(v, pi_red.count(v))  for v in sorted(set(pi_red))]
+        pi_str = "  ".join(f"{v}×{m}" for v, m in pi_dist)
+        pi_r_str = "  ".join(f"{v}×{m}" for v, m in pi_red_dist)
+        print(f"done")
+
+    results.append({
+        'num': num, 'poly': str(poly),
+        'delta': delta, 'nl': nl, 'max_w': max_w,
+        'walsh': walsh_dist,
+        'gr_str': gr_str,
+        'sr_str': sr_str,
+        'pi_str': pi_str, 'pi_r_str': pi_r_str,
+        'pi_dist': pi_dist, 'pi_red_dist': pi_red_dist,
+    })
+    print()
+
+# =============================================================
+# Summary Tables
+# =============================================================
+
+sep = "-" * 80
+
+print(f"\n{sep}")
+print(f"  Table 1: Core Invariants (n={n}, q={q})")
+print(sep)
+print(f"  {'#':^4} | {'δ_F':^4} | {'NL':^5} | {'|W|_max':^7} | {'Γ-rank':^9} | {'Σ-rank':^12}")
+print(sep.replace("-", "="))
+
+for r in results:
+    print(f"  {r['num']:^4} | {r['delta']:^4} | {r['nl']:^5} | {r['max_w']:^7} | "
+          f"{r['gr_str']:^9} | {r['sr_str']:^12}")
+
+print()
+
+print(sep)
+print(f"  Table 2: Extended Walsh Spectrum Distribution")
+print(sep)
+for r in results:
+    w_str = "  ".join(f"{v}×{m}" for v, m in r['walsh'])
+    print(f"  #{r['num']}:  {w_str}")
+print()
+
+print(sep)
+print(f"  Table 3: Distance Invariant Π_F Distribution")
+print(sep)
+for r in results:
+    print(f"  #{r['num']}:  {r['pi_str']}")
+print()
+
+print(sep)
+print(f"  Table 4: Reduced Distance Invariant Π_F^0 (c=0) Distribution")
+print(sep)
+for r in results:
+    print(f"  #{r['num']}:  {r['pi_r_str']}")
+print()
+
+print(f"{'=' * 80}")
+print(f"  Computation Completed!")
+print(f"{'=' * 80}")
