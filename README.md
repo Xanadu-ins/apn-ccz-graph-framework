@@ -1,4 +1,5 @@
 This repository is provided to support reproducibility of the experimental results.
+
 # APN CCZ-Equivalence via Graph Isomorphism
 
 ## Overview
@@ -12,26 +13,32 @@ We propose a framework that reduces the problem of CCZ-equivalence of APN functi
 ---
 
 ## Repository Structure
+
 code/ SageMath implementations (graph constructions + invariant computations)
-data/ Input APN function sets
+
 results/ Experimental results (tables and logs)
 
-The `code/` directory includes:
-- Four graph construction methods
-- Additional scripts for computing classical invariants of selected APN functions
+list_of_APN_functions_for_different_n/ APN function lists for different n
 
----
 
-## Implemented Methods
+### `code/` directory
+- Four graph construction methods:
+  - Weighted Graph
+  - Minimum-Weight Codeword Subgraph
+  - Incidence Bipartite Graph
+  - Higher-Order Incidence Bipartite Graph
+- Additional scripts for computing classical invariants of selected APN functions  
+  (organized by `n = 5, 6, 7`)
 
-The repository includes four graph constructions:
+### `results/` directory
+- For each graph construction:
+  - One `.xlsx` file containing all results (multi-sheet, organized by `n`)
+  - Corresponding `.csv` files extracted from each sheet for direct preview on GitHub
+- For invariant computations:
+  - Subdirectories `n5/`, `n6/`, `n7/` containing the corresponding computed results
 
-- Weighted Graph
-- Minimum-Weight Codeword Subgraph
-- Incidence Bipartite Graph
-- Higher-Order Incidence Bipartite Graph
-
-In addition, we provide scripts for computing values of selected APN functions under certain classical invariants.
+### APN function lists
+- The file `list_of_APN_functions_for_different_n` provides the APN functions used in experiments for different values of `n`
 
 ---
 
@@ -53,7 +60,6 @@ Before running the scripts, please complete the following setup steps.
 Open **SageMath Shell** and run:
 
 cd ~
-
 wget http://pallini.di.uniroma1.it/nauty2_9_1.tar.gz
 
 tar zxvf nauty2_9_1.tar.gz
@@ -63,6 +69,7 @@ cd nauty2_9_1
 ./configure
 
 make
+
 
 If the executable `dreadnaut` is generated successfully, the installation is complete.
 
@@ -74,49 +81,48 @@ Open **SageMath Shell** and run:
 
 sage -pip install psutil
 
+
 This package is used to monitor memory usage during experiments.
 
 ---
 
 ## How to Run
 
-1. Open SageMath 9.3 with Jupyter Notebook:
+1. Open SageMath with Jupyter Notebook:
 
 sage -n jupyter
 
-3. Load one of the scripts from the `code/` directory.
 
-4. Modify the following parameters in the script:
-   
+2. Load a script from the `code/` directory.
+
+3. Modify the following parameters:
    - Dimension `n`
-     
-   - List of APN functions
+   - List of APN functions (see provided list)
 
-6. Execute the script to generate canonical forms and experimental results.
+4. Execute the script to generate results.
 
 ---
 
 ## Experimental Results
 
-All experimental results reported in the paper are included in the `results/` directory.
+All experimental results are provided in the `results/` directory.
 
-- `n7_comparison.csv`: Representative comparison for dimension n = 7
-  
-- Additional datasets for other dimensions
+- `.xlsx` files: complete datasets (multi-sheet, grouped by `n`)
+- `.csv` files: extracted per-`n` results for direct GitHub preview
 
-These results demonstrate that the proposed graph-based methods achieve stronger distinguishability than classical invariants in several cases.
+A representative comparison (e.g., for `n = 7`) is included in the paper, while full datasets are available here.
 
 ---
 
 ## Reproducibility
 
-All experiments in the paper can be reproduced using the provided scripts and datasets.
+All experiments in the paper can be reproduced using the provided scripts, APN function lists, and datasets.
 
 ---
 
 ## Notes
 
-- Due to the flexibility of SageMath scripts, users are expected to manually adjust parameters (such as dimension and function lists) to reproduce specific experiments.
+- Users are expected to manually adjust parameters (such as `n` and function lists) in the scripts.
 - The incidence bipartite graph construction provides the best trade-off between efficiency and discriminative power in our experiments.
 
 ---
