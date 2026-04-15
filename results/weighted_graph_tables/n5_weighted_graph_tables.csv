@@ -1,0 +1,5 @@
+﻿Table 1. Canonical Hash Values of Weighted Graphs of APN Functions over F2^5,,
+Field,APN Function,Canonical Hash Value
+F2^5,x^3,[N2ab2b41b 5ef44ae6 6296afc6]
+F2^5,x^5,[Ndbec97e 3d0cc9e6 2f73a74a]
+F2^5,x^15,[N2939facc 44afaa3a 4b5ab6f3]

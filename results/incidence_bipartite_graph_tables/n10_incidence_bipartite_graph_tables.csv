@@ -1,0 +1,5 @@
+Table 13. Canonical Hash Values of Incidence Bipartite Graphs for APN Functions over F2^10,,,,
+Field,APN Function,Canonical Hash,Γ-rank,Aut(Cef)
+F2^10,1,[N43e479ea 68859f31 354d0e05],125042,2^11，3，5，11，31
+F2^10,2,[N5a30182b 524cd640 2a08dcaf],164026,31744
+F2^10,3,[N1868b4ef 0ccc28a 74a2d5ea],164026,31744

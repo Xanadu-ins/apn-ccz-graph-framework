@@ -1,0 +1,20 @@
+Table 10. Canonical Hash Values of Incidence Bipartite Graphs for APN Functions over F2^7,,,,,
+Field,APN Function,Canonical Hash,¦£-rank,¦¤-rank,Walsh Spectrum
+F2^7,1,[N418da345 56c5cf2c 188977e2],3610,198,Classical
+F2^7,2,[N329cc151 5ec27d94 5308fce3],3610,198,Classical
+F2^7,3,[N46db4b94 2d37aca5 3e3f75ea],3708,198,Classical
+F2^7,4,[Nf2cf953 4fa50580 5e5a8a48],4270,338,Classical
+F2^7,5,[N435e7d4 a8e9b5d 5dd0cef8],4704,436,Classical
+F2^7,6,[N637f4638 1381e9eb de76041],8128,4928,Non-classical
+F2^7,7,[N6a6b7243 235c7141 6b4bd523],4026,212,Classical
+F2^7,8,[N2045196 4ba7e059 3ed78ea7],4034,210,Classical
+F2^7,9,[N64f587ee 17c3fb29 738dc2a5],4038,212,Classical
+F2^7,10,[N7c8bf918 5fdee0af 740395ba],4040,210,Classical
+F2^7,11,[N246daaaa 57c80cc3 6a734eb9],4040,212,Classical
+F2^7,12,[N5ffd7c08 1c01e70c 36460a3d],4040,212,Classical
+F2^7,13,[N295f7038 80fbc66 6329c34],4044,212,Classical
+F2^7,14,[N376f7394 e2ac023 d1425cd],4048,210,Classical
+F2^7,15,[N14d5636 289b14b6 4a9c0d12],4048,210,Classical
+F2^7,16,[N9171c28 4e06e404 3d9a9115],4048,210,Classical
+F2^7,17,[Nbe03fce 5be7ae7d 5ba04ded],4048,212,Classical
+F2^7,18,[N4c59683e 7386ee35 6176a80c],4050,210,Classical

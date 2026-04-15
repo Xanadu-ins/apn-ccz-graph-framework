@@ -1,0 +1,5 @@
+Table 8. Canonical Hash Values of Incidence Bipartite Graphs for APN Functions over F2^5,,,,,
+Field,APN Function,Canonical Hash,¦£-rank,¦¤-rank,Walsh Spectrum
+F2^5,x^3,[N2cb8bd10 155ba9ac 346e189d],330,42,Classical
+F2^5,x^5,[N40125975 c93bd9b 5dc32899],330,42,Classical
+F2^5,x^15,[N4ecf7210 564c0776 5859508f],496,232,Non-classical

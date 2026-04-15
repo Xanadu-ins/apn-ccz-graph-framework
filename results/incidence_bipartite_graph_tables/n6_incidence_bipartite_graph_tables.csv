@@ -1,0 +1,15 @@
+Table 9. Canonical Hash Values of Incidence Bipartite Graphs for APN Functions over F2^6,,,,,
+Field,APN Function,Canonical Hash,¦£-rank,¦¤-rank,Walsh Spectrum
+F2^6,1,[N540ff28d 2ede61f4 3476e9c5],1102,94,Classical
+F2^6,2,[Ncff3544 271353a2 4e5a898a],1146,94,Classical
+F2^6,3,[N6588352c 18a73639 e937676],1158,96,Classical
+F2^6,4,[N4c440e9d 595e4ae8 6db73cba],1166,94,Classical
+F2^6,5,[N7d75a078 4ff23fdd 2e656816],1166,96,Classical
+F2^6,6,[N7cb96b23 29d1b12b 1d0c2045],1168,96,Classical
+F2^6,7,[N73ab2c86 28d9d6bd 4503e395],1170,96,Non-classical
+F2^6,8,[N6f1cc39d 1ebe82eb 66b40791],1170,96,Classical
+F2^6,9,[N603c19b4 2243e39d 6ccbc8fc],1170,96,Classical
+F2^6,10,[N6f72223b 1162eb42 16e22458],1170,96,Classical
+F2^6,11,[N4d0051e4 1f899a75 541762c5],1172,96,Classical
+F2^6,12,[N4105a008 4ef1c720 2ec3e3d7],1172,96,Classical
+F2^6,13,[N28d220fe 7b4456ca 3ab49971],1174,96,Classical

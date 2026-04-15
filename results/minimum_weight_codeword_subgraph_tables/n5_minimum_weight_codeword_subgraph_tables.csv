@@ -1,0 +1,5 @@
+Table 3. Canonical Hash Values of Minimum Weight Codeword Subgraphs for APN Functions over F2^5,,
+Field,APN Function,Canonical Hash Value
+F2^5,x^3,[N4b9219ed 3e1fa3a 6a726ff3]
+F2^5,x^5,[N2e89f34 60f42a36 35fa094f]
+F2^5,x^15,[N8a68f1a 3c622321 54e95f48]
