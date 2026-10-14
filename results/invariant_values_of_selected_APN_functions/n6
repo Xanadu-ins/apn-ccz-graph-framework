@@ -4,73 +4,86 @@
 ================================================================================
 
   [Automatic Criteria]
-    Δ-rank (dev)    : Skip  (Threshold: n ≤ 5)
+    Δ-rank (dev)    : Compute  (Threshold: n ≤ 5)
     Γ-rank (Γ_F)   : Compute  (Threshold: n ≤ 6)
     Π_F / Π_F^0    : Compute  (Threshold: n ≤ 6)
 
   -- Computing #1: F(x) = X^3 -----------------------------------------------
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
   -- Computing #2: F(x) = alpha*X^9 + (alpha^5 + alpha^4 + alpha^3 + 1)*X^6 + X^3 
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
   -- Computing #3: F(x) = X^40 + alpha^3*X^34 + alpha^3*X^20 + X^18 + alpha^3*X^10 + (alpha^5 + alpha^3 + alpha^2 + 1)*X^9 + X^5 + X^3 
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
   -- Computing #4: F(x) = (alpha^5 + alpha^3 + alpha^2 + 1)*X^18 + (alpha + 1)*X^17 + (alpha^5 + alpha^4)*X^10 + (alpha^4 + alpha^3)*X^9 + (alpha + 1)*X^5 + X^3 
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
   -- Computing #5: F(x) = alpha*X^24 + X^10 + X^3 ---------------------------
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
   -- Computing #6: F(x) = (alpha^5 + alpha^2 + alpha)*X^24 + (alpha^5 + alpha^2 + alpha)*X^20 + (alpha^5 + alpha^2 + alpha)*X^18 + (alpha^5 + alpha^2 + alpha)*X^17 + X^3 
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
   -- Computing #7: F(x) = X^48 + (alpha^5 + alpha^4 + alpha^3 + 1)*X^33 + X^17 + (alpha^3 + 1)*X^9 + (alpha^5 + alpha^4 + alpha^3 + 1)*X^5 + X^3 
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
   -- Computing #8: F(x) = (alpha^3 + alpha)*X^36 + (alpha^3 + alpha^2 + 1)*X^18 + (alpha^3 + alpha)*X^17 + (alpha^3 + alpha)*X^9 + X^3 
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
   -- Computing #9: F(x) = (alpha^3 + alpha^2 + 1)*X^48 + (alpha^5 + 1)*X^34 + (alpha^5 + alpha^3 + alpha^2 + alpha)*X^24 + alpha^5*X^17 + (alpha^5 + alpha^3)*X^10 + X^3 
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
   -- Computing #10: F(x) = (alpha^5 + alpha^4 + alpha^3 + alpha^2 + alpha)*X^48 + (alpha^4 + alpha^2 + alpha + 1)*X^36 + (alpha^4 + alpha^2 + alpha)*X^20 + (alpha^5 + alpha^3)*X^17 + (alpha^4 + 1)*X^10 + (alpha^4 + alpha)*X^6 + X^3 
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
   -- Computing #11: F(x) = (alpha^3 + alpha^2)*X^36 + (alpha^3 + alpha^2)*X^34 + (alpha^4 + alpha^2 + alpha)*X^18 + X^10 + X^5 + X^3 
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
   -- Computing #12: F(x) = (alpha^5 + alpha^4 + alpha^3 + alpha^2)*X^40 + (alpha^3 + alpha^2 + alpha)*X^34 + (alpha^3 + alpha^2)*X^33 + (alpha^5 + alpha^3 + alpha^2)*X^12 + (alpha^2 + alpha + 1)*X^9 + (alpha^5 + alpha^3 + 1)*X^6 + (alpha^3 + alpha^2)*X^5 + X^3 
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
   -- Computing #13: F(x) = X^48 + alpha^3*X^40 + (alpha^5 + alpha^3 + alpha^2 + 1)*X^36 + X^12 + X^5 + X^3 
     δ_F, NL, Walsh spectrum ... Done
     Γ-rank ... Done
+    Δ-rank ... Done
     Π_F, Π_F^0 ... Done
 
 
@@ -79,19 +92,19 @@
 --------------------------------------------------------------------------------
     Function   | δ_F  |  NL  | |W|_max |  Γ-rank  |  Δ-rank 
 ================================================================================
-    #1 (X^3)   |  2   |  24  |   16    |   1102   | Skipped 
-  #2 (alpha*X^9 + (alpha^5 + alpha^4 + alpha^3 + 1)*X^6 + X^3) |  2   |  24  |   16    |   1146   | Skipped 
-  #3 (X^40 + alpha^3*X^34 + alpha^3*X^20 + X^18 + alpha^3*X^10 + (alpha^5 + alpha^3 + alpha^2 + 1)*X^9 + X^5 + X^3) |  2   |  24  |   16    |   1158   | Skipped 
-  #4 ((alpha^5 + alpha^3 + alpha^2 + 1)*X^18 + (alpha + 1)*X^17 + (alpha^5 + alpha^4)*X^10 + (alpha^4 + alpha^3)*X^9 + (alpha + 1)*X^5 + X^3) |  2   |  24  |   16    |   1166   | Skipped 
-  #5 (alpha*X^24 + X^10 + X^3) |  2   |  24  |   16    |   1166   | Skipped 
-  #6 ((alpha^5 + alpha^2 + alpha)*X^24 + (alpha^5 + alpha^2 + alpha)*X^20 + (alpha^5 + alpha^2 + alpha)*X^18 + (alpha^5 + alpha^2 + alpha)*X^17 + X^3) |  2   |  24  |   16    |   1168   | Skipped 
-  #7 (X^48 + (alpha^5 + alpha^4 + alpha^3 + 1)*X^33 + X^17 + (alpha^3 + 1)*X^9 + (alpha^5 + alpha^4 + alpha^3 + 1)*X^5 + X^3) |  2   |  16  |   32    |   1170   | Skipped 
-  #8 ((alpha^3 + alpha)*X^36 + (alpha^3 + alpha^2 + 1)*X^18 + (alpha^3 + alpha)*X^17 + (alpha^3 + alpha)*X^9 + X^3) |  2   |  24  |   16    |   1170   | Skipped 
-  #9 ((alpha^3 + alpha^2 + 1)*X^48 + (alpha^5 + 1)*X^34 + (alpha^5 + alpha^3 + alpha^2 + alpha)*X^24 + alpha^5*X^17 + (alpha^5 + alpha^3)*X^10 + X^3) |  2   |  24  |   16    |   1170   | Skipped 
-  #10 ((alpha^5 + alpha^4 + alpha^3 + alpha^2 + alpha)*X^48 + (alpha^4 + alpha^2 + alpha + 1)*X^36 + (alpha^4 + alpha^2 + alpha)*X^20 + (alpha^5 + alpha^3)*X^17 + (alpha^4 + 1)*X^10 + (alpha^4 + alpha)*X^6 + X^3) |  2   |  24  |   16    |   1170   | Skipped 
-  #11 ((alpha^3 + alpha^2)*X^36 + (alpha^3 + alpha^2)*X^34 + (alpha^4 + alpha^2 + alpha)*X^18 + X^10 + X^5 + X^3) |  2   |  24  |   16    |   1172   | Skipped 
-  #12 ((alpha^5 + alpha^4 + alpha^3 + alpha^2)*X^40 + (alpha^3 + alpha^2 + alpha)*X^34 + (alpha^3 + alpha^2)*X^33 + (alpha^5 + alpha^3 + alpha^2)*X^12 + (alpha^2 + alpha + 1)*X^9 + (alpha^5 + alpha^3 + 1)*X^6 + (alpha^3 + alpha^2)*X^5 + X^3) |  2   |  24  |   16    |   1172   | Skipped 
-  #13 (X^48 + alpha^3*X^40 + (alpha^5 + alpha^3 + alpha^2 + 1)*X^36 + X^12 + X^5 + X^3) |  2   |  24  |   16    |   1174   | Skipped 
+    #1 (X^3)   |  2   |  24  |   16    |   1102   |    94   
+  #2 (alpha*X^9 + (alpha^5 + alpha^4 + alpha^3 + 1)*X^6 + X^3) |  2   |  24  |   16    |   1146   |    94   
+  #3 (X^40 + alpha^3*X^34 + alpha^3*X^20 + X^18 + alpha^3*X^10 + (alpha^5 + alpha^3 + alpha^2 + 1)*X^9 + X^5 + X^3) |  2   |  24  |   16    |   1158   |    96   
+  #4 ((alpha^5 + alpha^3 + alpha^2 + 1)*X^18 + (alpha + 1)*X^17 + (alpha^5 + alpha^4)*X^10 + (alpha^4 + alpha^3)*X^9 + (alpha + 1)*X^5 + X^3) |  2   |  24  |   16    |   1166   |    94   
+  #5 (alpha*X^24 + X^10 + X^3) |  2   |  24  |   16    |   1166   |    96   
+  #6 ((alpha^5 + alpha^2 + alpha)*X^24 + (alpha^5 + alpha^2 + alpha)*X^20 + (alpha^5 + alpha^2 + alpha)*X^18 + (alpha^5 + alpha^2 + alpha)*X^17 + X^3) |  2   |  24  |   16    |   1168   |    96   
+  #7 (X^48 + (alpha^5 + alpha^4 + alpha^3 + 1)*X^33 + X^17 + (alpha^3 + 1)*X^9 + (alpha^5 + alpha^4 + alpha^3 + 1)*X^5 + X^3) |  2   |  16  |   32    |   1170   |    96   
+  #8 ((alpha^3 + alpha)*X^36 + (alpha^3 + alpha^2 + 1)*X^18 + (alpha^3 + alpha)*X^17 + (alpha^3 + alpha)*X^9 + X^3) |  2   |  24  |   16    |   1170   |    96   
+  #9 ((alpha^3 + alpha^2 + 1)*X^48 + (alpha^5 + 1)*X^34 + (alpha^5 + alpha^3 + alpha^2 + alpha)*X^24 + alpha^5*X^17 + (alpha^5 + alpha^3)*X^10 + X^3) |  2   |  24  |   16    |   1170   |    96   
+  #10 ((alpha^5 + alpha^4 + alpha^3 + alpha^2 + alpha)*X^48 + (alpha^4 + alpha^2 + alpha + 1)*X^36 + (alpha^4 + alpha^2 + alpha)*X^20 + (alpha^5 + alpha^3)*X^17 + (alpha^4 + 1)*X^10 + (alpha^4 + alpha)*X^6 + X^3) |  2   |  24  |   16    |   1170   |    96   
+  #11 ((alpha^3 + alpha^2)*X^36 + (alpha^3 + alpha^2)*X^34 + (alpha^4 + alpha^2 + alpha)*X^18 + X^10 + X^5 + X^3) |  2   |  24  |   16    |   1172   |    96   
+  #12 ((alpha^5 + alpha^4 + alpha^3 + alpha^2)*X^40 + (alpha^3 + alpha^2 + alpha)*X^34 + (alpha^3 + alpha^2)*X^33 + (alpha^5 + alpha^3 + alpha^2)*X^12 + (alpha^2 + alpha + 1)*X^9 + (alpha^5 + alpha^3 + 1)*X^6 + (alpha^3 + alpha^2)*X^5 + X^3) |  2   |  24  |   16    |   1172   |    96   
+  #13 (X^48 + alpha^3*X^40 + (alpha^5 + alpha^3 + alpha^2 + 1)*X^36 + X^12 + X^5 + X^3) |  2   |  24  |   16    |   1174   |    96   
 
 --------------------------------------------------------------------------------
   Table 2: Extended Walsh Spectrum Distribution (value × multiplicity)
