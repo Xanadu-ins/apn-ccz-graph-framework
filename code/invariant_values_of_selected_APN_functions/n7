@@ -54,8 +54,8 @@ apn_functions = [
     ("18", X**3 + X**5 + X**6 + X**12 + X**33 + X**34),
 ]
 
-SKIP_GAMMA   = (n > 6)
-SKIP_DELTA   = (n > 5)
+SKIP_GAMMA   = False
+SKIP_DELTA   = False
 SKIP_DIST    = (n > 6)
 
 def differential_uniformity(F_map):
