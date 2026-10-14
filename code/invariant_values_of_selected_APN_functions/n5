@@ -1,15 +1,6 @@
-# =============================================================
-# SageMath 9.3 — Chapter 3: CCZ-Equivalence Invariants
-# n = 5, Test Functions: X^3, X^5, X^15
 
 
-# ========== 1. Modify n here ==========
-
-n = 5                                        # ← Modify here
-
-# =============================================================
-# Basic Setup
-# =============================================================
+n = 5
 
 F.<alpha> = GF(2^n)
 q = 2^n
@@ -18,23 +9,17 @@ R.<X> = PolynomialRing(F, 'X')
 
 idx_of = {elem: idx for idx, elem in enumerate(F_list)}
 
-# =============================================================
-# ksi: the primitive element of GF(2^n)  (usable for any n)
-# =============================================================
-
 ksi = alpha
 assert ksi != 0 and ksi.multiplicative_order() == q - 1, \
     "ksi must be a primitive element of GF(2^n)"
-#
-
+def ksi_pow_table():
+    return {i: ksi**i for i in range(q - 1)}
 def parse_poly(expr_str):
-   
     return sage_eval(expr_str, locals={'X': X, 'ksi': ksi})
 
 def precompute(F_map):
     return [F_map(x) for x in F_list]
 
-# ---- Trace Calculation (Explicit Formula, Avoid Name Conflict) ----
 def Tr(elt):
     """
     Absolute trace over GF(2^n):
@@ -48,28 +33,15 @@ def Tr(elt):
         result = result + p
     return int(result)
 
-# =============================================================
-# ========== 2. Modify functions here ==========
-# =============================================================
-
-apn_functions = [                           # ← Modify here
+apn_functions = [
     ("1", "X^3"),
     ("2", "X^5"),
     ("3", "X**15"),
 ]
 
-
-# =============================================================
-# Automatic Criteria (No Modification Needed)
-# =============================================================
-
 SKIP_GAMMA   = (n > 6)
-SKIP_SIGMA   = (n > 5)
+SKIP_DELTA   = (n > 5)
 SKIP_DIST    = (n > 6)
-
-# =============================================================
-# Invariant Computation Functions
-# =============================================================
 
 def differential_uniformity(F_map):
     max_count = 0
@@ -84,7 +56,6 @@ def differential_uniformity(F_map):
             if count > max_count:
                 max_count = count
     return max_count
-
 
 def nonlinearity(F_map):
     """W_F(a,b) = Σ (-1)^{Tr(ax + bF(x))}, iterate over a≠0 only"""
@@ -106,7 +77,6 @@ def nonlinearity(F_map):
     nl = 2**(n-1) - max_walsh / 2
     return int(nl), int(max_walsh)
 
-
 def extended_walsh_spectrum(F_map):
     """Return full spectrum (non-zero values and their multiplicities)"""
     spectrum = []
@@ -123,7 +93,6 @@ def extended_walsh_spectrum(F_map):
     spectrum.sort()
     return spectrum
 
-
 def gamma_rank(F_map):
     """dev(Γ_F): incidence matrix q² × q² over GF(2)"""
     F_vals = precompute(F_map)
@@ -136,10 +105,8 @@ def gamma_rank(F_map):
             M[block_idx, point_idx] = 1
     return int(M.rank())
 
-
 def delta_rank(F_map):
     F_vals = precompute(F_map)
-    # Im(D_uF) for u != 0:  {F(x+u)+F(x) : x ∈ F2^n}
     diff_image = []
     for u in F_list:
         if u == 0:
@@ -159,9 +126,9 @@ def delta_rank(F_map):
                     M[idx_of[uu] * q + idx_of[v + b], col] = 1
     return int(M.rank())
 
-
 def distance_invariant(F_map, reduced=False):
-   
+    """Π_F = [#π_F(b,c) : b,c], π_F(b,c) = {a : (∃x) F(x)+F(a+x)+F(a+c) = b}
+    """
     F_vals = precompute(F_map)
     if reduced:
         counts = []
@@ -197,17 +164,13 @@ def distance_invariant(F_map, reduced=False):
     counts.sort()
     return counts
 
-# =============================================================
-# Main Program
-# =============================================================
-
 print(f"\n{'=' * 80}")
 print(f"#  Chapter 3: CCZ-Equivalence Invariants  (n = {n}, q = {q})")
 print(f"#  Functions: {[name for _, name in apn_functions]}")
 print(f"{'=' * 80}\n")
 
 print(f"  [Automatic Criteria]")
-print(f"    Δ-rank (dev)    : {'Compute' if not SKIP_SIGMA else 'Skip'}  (Threshold: n ≤ 5)")
+print(f"    Δ-rank (dev)    : {'Compute' if not SKIP_DELTA else 'Skip'}  (Threshold: n ≤ 5)")
 print(f"    Γ-rank (Γ_F)   : {'Compute' if not SKIP_GAMMA else 'Skip'}  (Threshold: n ≤ 6)")
 print(f"    Π_F / Π_F^0    : {'Compute' if not SKIP_DIST  else 'Skip'}  (Threshold: n ≤ 6)")
 print()
@@ -216,10 +179,10 @@ results = []
 
 for num, name in apn_functions:
     if isinstance(name, str):
-        F_map = parse_poly(name)      
+        F_map = parse_poly(name)
         name_str = name
     else:
-        F_map = R(name)              
+        F_map = R(name)
         name_str = str(name)
     print(f"  -- Computing #{num}: F(x) = {name_str} " + "-" * max(0, 50 - len(name_str)))
     print(f"    δ_F, NL, Walsh spectrum ...", end=" ", flush=True)
@@ -241,12 +204,12 @@ for num, name in apn_functions:
         gr_str = str(gr)
         print(f"Done")
 
-    if SKIP_SIGMA:
-        sr, sr_str = None, "Skipped"
+    if SKIP_DELTA:
+        dr, dr_str = None, "Skipped"
     else:
         print(f"    Δ-rank ...", end=" ", flush=True)
-        sr = delta_rank(F_map)
-        sr_str = str(sr)
+        dr = delta_rank(F_map)
+        dr_str = str(dr)
         print(f"Done")
 
     if SKIP_DIST:
@@ -262,7 +225,7 @@ for num, name in apn_functions:
         pi_str      = "  ".join(f"{v}×{m}" for v, m in pi_dist)
         pi_r_str    = "  ".join(f"{v}×{m}" for v, m in pi_red_dist)
         pi_min      = min(pi_full)
-        pi_bound    = ceil(pi_min / 3) + 1     
+        pi_bound    = ceil(pi_min / 3) + 1
         print(f"Done")
 
     results.append({
@@ -270,16 +233,12 @@ for num, name in apn_functions:
         'delta': delta, 'nl': nl, 'max_w': max_w,
         'walsh': walsh_dist,
         'gr': gr, 'gr_str': gr_str,
-        'sr': sr, 'sr_str': sr_str,
+        'dr': dr, 'dr_str': dr_str,
         'pi': pi_dist, 'pi_str': pi_str,
         'pi_red': pi_red_dist, 'pi_r_str': pi_r_str,
         'pi_min': pi_min, 'pi_bound': pi_bound,
     })
     print()
-
-# =============================================================
-# Summary Tables
-# =============================================================
 
 sep = "-" * 80
 
@@ -291,7 +250,7 @@ print(sep.replace("-", "="))
 
 for r in results:
     print(f"  {'#'+r['num']+' ('+r['name']+')':^12} | {r['delta']:^4} | {r['nl']:^4} | "
-          f"{r['max_w']:^7} | {r['gr_str']:^8} | {r['sr_str']:^8}")
+          f"{r['max_w']:^7} | {r['gr_str']:^8} | {r['dr_str']:^8}")
 
 print()
 
