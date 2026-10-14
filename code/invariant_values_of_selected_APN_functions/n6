@@ -50,7 +50,7 @@ apn_functions = [
 ]
 
 SKIP_GAMMA   = (n > 6)
-SKIP_DELTA   = (n > 5)
+SKIP_DELTA   = False
 SKIP_DIST    = (n > 6)
 
 def differential_uniformity(F_map):
