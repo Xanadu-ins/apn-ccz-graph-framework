@@ -180,7 +180,7 @@ def distance_invariant(F_map, reduced=False):
     return counts
 
 print(f"\n{'=' * 80}")
-print(f"#  Chapter 3: CCZ-Equivalence Invariants  (n = {n}, q = {q})")
+print(f"#  CCZ-Equivalence Invariants  (n = {n}, q = {q})")
 print(f"#  Functions: {[name for _, name in apn_functions]}")
 print(f"{'=' * 80}\n")
 
